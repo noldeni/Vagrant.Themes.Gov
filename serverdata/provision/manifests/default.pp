@@ -3,7 +3,7 @@ group { "puppet":
 }
 
 exec { 'apt-get update':
-  command => "/usr/bin/apt-get update --force-yes",
+  command  => "/usr/bin/apt-get update --force-yes",
   require  => File['/etc/apt/sources.list']
 }
 
@@ -53,13 +53,13 @@ file { "/var/www/":
 # Configuration files
 file { "/etc/apt/sources.list":
   ensure  => "link",
-  target  => "/vagrant/serverdata/etc/apt/sources.list",
+  target  => "/serverdata/etc/apt/sources.list",
   force => true,
 }
 
 file { "/etc/apache2/sites-available/":
     ensure  => "directory",
-    source  => "/vagrant/serverdata/etc/apache2/sites-available/",
+    source  => "/serverdata/etc/apache2/sites-available/",
     require => Package["apache2-mpm-prefork"],
     notify  => Service["apache2"],
     force   => true,
@@ -68,14 +68,14 @@ file { "/etc/apache2/sites-available/":
 
  file { "/etc/php5/cli/php.ini":
     ensure  => "file",
-    source  => "/vagrant/serverdata/etc/php5/cli/php.ini",
+    source  => "/serverdata/etc/php5/cli/php.ini",
     require => Package["php5"],
     notify  => Service["apache2"],
     force => true,
   }
   file { "/etc/php5/apache2/php.ini":
     ensure  => "file",
-    source  => "/vagrant/serverdata/etc/php5/apache2/php.ini",
+    source  => "/serverdata/etc/php5/apache2/php.ini",
     require => Package["php5"],
     notify  => Service["apache2"],
     force => true,
@@ -103,6 +103,6 @@ file { "/etc/apache2/sites-available/":
   }
   file { "/home/vagrant/Maildir":
     ensure  => "link",
-    target  => "/vagrant/serverdata/home/vagrant/Maildir",
+    target  => "/serverdata/home/vagrant/Maildir",
     force => true,
   }
