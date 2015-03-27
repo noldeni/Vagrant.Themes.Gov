@@ -26,7 +26,9 @@ Vagrant.configure("2") do |config|
   config.vm.network :private_network, ip: "192.168.31.16"
 
 
-
+  # Disabling the default /vagrant share
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  
   unless ((/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) == nil) then
     print "detected, that you run vagrant on windows ...\n"
     unless Vagrant.has_plugin?("vagrant-winnfsd") then
