@@ -1,9 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-print "You may be asked for your sudo password to use NFS shares\n"
-print "More Information: https://docs.vagrantup.com/v2/synced-folders/nfs.html\n\n"
-
 unless Vagrant.has_plugin?("vagrant-vbguest")
   print "please execute the following command to enable automated vbguest installation\n\n"
   print "vagrant plugin install vagrant-vbguest"
@@ -29,20 +26,21 @@ Vagrant.configure("2") do |config|
   # Disabling the default /vagrant share
   config.vm.synced_folder ".", "/vagrant", disabled: true
   
-  unless ((/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) == nil) then
+  if ((/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil)
     print "detected, that you run vagrant on windows ...\n"
-    unless Vagrant.has_plugin?("vagrant-winnfsd") then
-      print "falling back to smb share \n"
-      print "more speed possible with vagrant-winnfsd plugin\n"
-      config.vm.synced_folder "serverdata/", "/serverdata", owner: "www-data", group:"www-data"
-      config.vm.synced_folder "project/", "/project", owner: "www-data", group:"www-data"
-    else
-      print "vagrant-winnfsd plugin found, using nfs\n"
-      print "if this doesn´t work uninstall the plugin\n"
+	if Vagrant.has_plugin?("vagrant-winnfsd")
+      print "\tvagrant-winnfsd plugin found, using nfs\n"
+      print "\tif this doesn´t work uninstall the plugin\n"
       config.vm.synced_folder "serverdata/", "/serverdata", type: "nfs"
       config.vm.synced_folder "project/", "/project", type: "nfs"
+	else
+      print "\tfalling back to smb share \n"
+      print "\tmore speed possible with vagrant-winnfsd plugin\n"
+      config.vm.synced_folder "serverdata/", "/serverdata", owner: "www-data", group:"www-data"
+      config.vm.synced_folder "project/", "/project", owner: "www-data", group:"www-data"
     end
   else
+	print "using nfs\n"
     config.vm.synced_folder "serverdata/", "/serverdata", type: "nfs"
     config.vm.synced_folder "project/", "/project", type: "nfs"
   end
