@@ -32,7 +32,7 @@ function getTypo3FromGit {
 # clean up
 
 cp /etc/phpmyadmin/apache.conf /etc/apache2/sites-enabled/phpmyadmin
-cp /vagrant/serverdata/etc/phpmyadmin/config.inc.php /etc/phpmyadmin/config.inc.php
+cp /serverdata/etc/phpmyadmin/config.inc.php /etc/phpmyadmin/config.inc.php
 
 if [ ! -d "/var/www/typo3conf" ]; then
 
@@ -47,11 +47,11 @@ if [ ! -d "/var/www/typo3conf" ]; then
 	ln -s typo3_src/index.php index.php
 	ln -s typo3_src/typo3 typo3
 
-	ln -s /serverdata/project/fileadmin fileadmin
-	ln -s /serverdata/project/uploads uploads
+	ln -s /project/fileadmin fileadmin
+	ln -s /project/uploads uploads
 	mkdir typo3conf
 	cd typo3conf
-	ln -s /serverdata/project/typo3conf/ext ext
+	ln -s /project/typo3conf/ext ext
 
 
 	# checkout from git ...
@@ -64,23 +64,23 @@ fi
 
 
 # copy configuration
-cp /serverdata/project/typo3conf/LocalConfiguration.php /var/www/typo3conf/
-cp /serverdata/project/typo3conf/PackageStates.php /var/www/typo3conf/
+cp /project/typo3conf/LocalConfiguration.php /var/www/typo3conf/
+cp /project/typo3conf/PackageStates.php /var/www/typo3conf/
 
 # import db
-mysql -u root           < /serverdata/serverdata/data/sql/prepare.sql
-mysql -u root t3-latest < /serverdata/serverdata/data/sql/t3-latest.sql
+mysql -u root           < /serverdata/data/sql/prepare.sql
+mysql -u root t3-latest < /serverdata/data/sql/t3-latest.sql
 
 
 # ensure extdir exists
 if [ ! -d "/serverdata/project/typo3conf/ext" ]; then
-	mkdir /serverdata/project/typo3conf/ext
+	mkdir /project/typo3conf/ext
 fi
 
 cd /var/www/typo3conf/ext/
 
 export GITTYPE=HTTP
-bash /vagrant/serverdata/provision/install-extensions.sh
+bash /serverdata/provision/install-extensions.sh
 
 # import database
 
